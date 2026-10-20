@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>爱旭招聘组 × WorkBuddy 工作台</title>
+<style>
+  :root {
+    --bg: #fafaf7;
+    --surface: #ffffff;
+    --surface-2: #f6f4ed;
+    --text-1: #1f1d18;
+    --text-2: #6e6b62;
+    --text-3: #9b988e;
+    --border: rgba(31,29,24,0.10);
+    --border-2: rgba(31,29,24,0.18);
+    --accent: #185fa5;
+    --accent-bg: #e6f1fb;
+    --accent-text: #042c53;
+    --teal: #0f6e56;
+    --teal-bg: #e1f5ee;
+    --amber: #854f0b;
+    --amber-bg: #faeeda;
+    --purple: #534ab7;
+    --purple-bg: #eeedfe;
+    --pink: #993556;
+    --pink-bg: #fbeaf0;
+    --coral: #993c1d;
+    --coral-bg: #faece7;
+    --green: #3b6d11;
+    --green-bg: #eaf3de;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: -apple-system, "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--text-1);
+    font-size: 13px;
+    line-height: 1.6;
+  }
+  .wrap { max-width: 1200px; margin: 0 auto; padding: 24px 28px 64px; }
+
+  /* Header */
+  .hdr {
+    background: var(--surface);
+    border: 0.5px solid var(--border);
+    border-radius: 16px;
+    padding: 20px 24px;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  .hdr-left { display: flex; align-items: center; gap: 14px; }
+  .logo {
+    width: 44px; height: 44px;
+    border-radius: 12px;
+    background: var(--accent-bg);
+    color: var(--accent-text);
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 500; font-size: 16px;
+  }
+  .hdr h1 { font-size: 15px; font-weight: 500; margin: 0; }
+  .hdr .sub { color: var(--text-2); font-size: 13px; margin-top: 2px; }
+  .hdr-meta { display: flex; gap: 16px; align-items: center; font-size: 12px; color: var(--text-2); }
+  .pill {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 4px 10px;
+    border-radius: 999px;
+    background: var(--surface-2);
+    color: var(--text-2);
+    font-size: 12px;
+  }
+  .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--teal); }
+
+  /* Top metrics */
+  .metrics {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+  .metric {
+    background: var(--surface-2);
+    border-radius: 10px;
+    padding: 12px 14px;
+  }
+  .metric .l { font-size: 12px; color: var(--text-2); margin-bottom: 4px; }
+  .metric .v { font-size: 22px; font-weight: 500; }
+  .metric .d { font-size: 12px; color: var(--text-2); margin-top: 2px; }
+  .metric.accent .v { color: var(--accent); }
+  .metric.teal .v { color: var(--teal); }
+  .metric.amber .v { color: var(--amber); }
+  .metric.purple .v { color: var(--purple); }
+
+  /* Layout */
+  .row {
+    display: grid;
+    grid-template-columns: 1.1fr 1fr;
+    gap: 16px;
+    margin-bottom: 16px;
+  }
+  @media (max-width: 900px) {
+    .row { grid-template-columns: 1fr; }
+    .metrics { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  .card {
+    background: var(--surface);
+    border: 0.5px solid var(--border);
+    border-radius: 14px;
+    padding: 16px 20px;
+  }
+  .card h2 {
+    font-size: 14px; font-weight: 500; margin: 0 0 12px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .card h2 .badge {
+    font-size: 11px; padding: 2px 8px; border-radius: 6px;
+    background: var(--accent-bg); color: var(--accent-text);
+    font-weight: 400;
+  }
+
+  /* Module grid */
+  .modules {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+  @media (max-width: 900px) { .modules { grid-template-columns: 1fr; } }
+  .module {
+    background: var(--surface);
+    border: 0.5px solid var(--border);
+    border-radius: 12px;
+    padding: 14px 16px;
+    cursor: pointer;
+    transition: border-color 0.15s, transform 0.15s;
+  }
+  .module:hover { border-color: var(--border-2); }
+  .module.active { border-color: var(--accent); }
+  .module-icon {
+    width: 32px; height: 32px;
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 8px;
+    font-weight: 500;
+  }
+  .module h3 { font-size: 14px; font-weight: 500; margin: 0 0 4px; }
+  .module p { font-size: 12px; color: var(--text-2); margin: 0 0 10px; }
+  .module ul { list-style: none; padding: 0; margin: 0; font-size: 12px; color: var(--text-2); }
+  .module li { padding: 2px 0; display: flex; align-items: center; gap: 6px; }
+  .module li::before { content: ""; width: 4px; height: 4px; border-radius: 50%; background: var(--text-3); }
+  .mi-kb { background: var(--accent-bg); color: var(--accent-text); }
+  .mi-ag { background: var(--purple-bg); color: var(--purple); }
+  .mi-fi { background: var(--coral-bg); color: var(--coral); }
+  .mi-sk { background: var(--amber-bg); color: var(--amber); }
+  .mi-au { background: var(--green-bg); color: var(--green); }
+
+  /* Agents */
+  .agent {
+    background: var(--surface-2);
+    border-radius: 10px;
+    padding: 12px 14px;
+    margin-bottom: 10px;
+  }
+  .agent-head { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; }
+  .agent-avatar {
+    width: 32px; height: 32px; border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 500; font-size: 13px;
+  }
+  .agent h4 { margin: 0; font-size: 13px; font-weight: 500; }
+  .agent .role { font-size: 11px; color: var(--text-2); }
+  .agent p { font-size: 12px; color: var(--text-2); margin: 4px 0 8px; }
+  .agent-actions { display: flex; flex-wrap: wrap; gap: 6px; }
+  .tag {
+    font-size: 11px;
+    padding: 3px 8px;
+    border-radius: 6px;
+    background: var(--surface);
+    border: 0.5px solid var(--border-2);
+    color: var(--text-2);
+  }
+
+  /* Skills table */
+  table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  th, td { padding: 8px 10px; text-align: left; border-bottom: 0.5px solid var(--border); }
+  th { color: var(--text-2); font-weight: 500; font-size: 11px; text-transform: uppercase; letter-spacing: 0.04em; }
+  td code { font-family: ui-monospace, "SF Mono", Menlo, monospace; background: var(--surface-2); padding: 1px 6px; border-radius: 4px; font-size: 11px; }
+
+  /* Automations */
+  .auto {
+    display: flex; align-items: center; gap: 12px;
+    padding: 10px 0;
+    border-bottom: 0.5px solid var(--border);
+  }
+  .auto:last-child { border-bottom: none; }
+  .auto-status {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--text-3);
+    flex-shrink: 0;
+  }
+  .auto-status.amber { background: var(--amber); }
+  .auto-status.teal { background: var(--teal); }
+  .auto-main { flex: 1; }
+  .auto-title { font-size: 13px; font-weight: 500; }
+  .auto-desc { font-size: 12px; color: var(--text-2); margin-top: 2px; }
+  .auto-freq {
+    font-size: 11px;
+    padding: 3px 8px;
+    border-radius: 6px;
+    background: var(--surface-2);
+    color: var(--text-2);
+    white-space: nowrap;
+  }
+
+  /* Files */
+  .file-row {
+    display: flex; align-items: center; gap: 10px;
+    padding: 6px 8px;
+    border-radius: 6px;
+    font-size: 12px;
+    cursor: pointer;
+  }
+  .file-row:hover { background: var(--surface-2); }
+  .file-icon {
+    width: 16px; height: 16px;
+    border-radius: 4px;
+    background: var(--accent-bg);
+    flex-shrink: 0;
+  }
+  .file-row .meta { color: var(--text-2); margin-left: auto; font-size: 11px; }
+
+  /* Tabs */
+  .tabs { display: flex; gap: 4px; margin-bottom: 12px; border-bottom: 0.5px solid var(--border); }
+  .tab {
+    padding: 6px 12px;
+    font-size: 12px;
+    color: var(--text-2);
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -1px;
+  }
+  .tab.active { color: var(--text-1); border-bottom-color: var(--accent); }
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
+
+  .footer { text-align: center; color: var(--text-3); font-size: 11px; margin-top: 24px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- Header -->
+  <div class="hdr">
+    <div class="hdr-left">
+      <div class="logo">爱旭</div>
+      <div>
+        <h1>爱旭招聘组 × WorkBuddy 工作台</h1>
+        <div class="sub">招聘大脑 · 4 位数字员工 · 工作区 · Skill · 自动化</div>
+      </div>
+    </div>
+    <div class="hdr-meta">
+      <span class="pill"><span class="dot"></span>运行中</span>
+      <span>负责人：小徐</span>
+      <span>版本 v0.1 · 2026-10-08</span>
+    </div>
+  </div>
+
+  <!-- Metrics -->
+  <div class="metrics">
+    <div class="metric accent">
+      <div class="l">在招岗位</div>
+      <div class="v">32</div>
+      <div class="d">较上周 +3</div>
+    </div>
+    <div class="metric teal">
+      <div class="l">活跃候选人</div>
+      <div class="v">187</div>
+      <div class="d">较上周 +24</div>
+    </div>
+    <div class="metric amber">
+      <div class="l">本周面试</div>
+      <div class="v">41</div>
+      <div class="d">较上周 +5</div>
+    </div>
+    <div class="metric purple">
+      <div class="l">Offer 转化</div>
+      <div class="v">17%</div>
+      <div class="d">月累计 22 份</div>
+    </div>
+  </div>
+
+  <!-- 5 Modules -->
+  <h2 style="font-size:14px; font-weight:500; margin: 8px 0 12px;">五大模块</h2>
+  <div class="modules" id="modules">
+    <div class="module active" data-tab="kb">
+      <div class="module-icon mi-kb">库</div>
+      <h3>知识库</h3>
+      <p>公司招聘大脑</p>
+      <ul>
+        <li>公司介绍 / 战略 / 文化</li>
+        <li>4 大方向岗位画像</li>
+        <li>面试标准 + 薪酬 Band</li>
+      </ul>
+    </div>
+    <div class="module" data-tab="agent">
+      <div class="module-icon mi-ag">员</div>
+      <h3>专家 / 智能体</h3>
+      <p>4 个数字员工</p>
+      <ul>
+        <li>JD 撰写官</li>
+        <li>简历筛选官</li>
+        <li>面试官助理</li>
+        <li>招聘周报官</li>
+      </ul>
+    </div>
+    <div class="module" data-tab="file">
+      <div class="module-icon mi-fi">档</div>
+      <h3>工作区文件</h3>
+      <p>JD / 简历 / 周报 / 面评</p>
+      <ul>
+        <li>JD 库 4 个方向</li>
+        <li>简历库 4 个状态池</li>
+        <li>周报 + 面评归档</li>
+      </ul>
+    </div>
+    <div class="module" data-tab="skill">
+      <div class="module-icon mi-sk">技</div>
+      <h3>Skill / 提示词包</h3>
+      <p>高频动作一键调</p>
+      <ul>
+        <li>/jd 生成 JD</li>
+        <li>/screen 简历评估</li>
+        <li>/interview /eval 面评</li>
+        <li>/weekly 周报</li>
+      </ul>
+    </div>
+    <div class="module" data-tab="auto">
+      <div class="module-icon mi-au">动</div>
+      <h3>自动化</h3>
+      <p>5 个自动化任务</p>
+      <ul>
+        <li>周报自动生成</li>
+        <li>人才库激活</li>
+        <li>面试提醒</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Detail row 1: 4 Agents + Automations -->
+  <div class="row">
+    <div class="card">
+      <h2>4 个数字员工 <span class="badge">随时叫起</span></h2>
+
+      <div class="agent">
+        <div class="agent-head">
+          <div class="agent-avatar" style="background: var(--accent-bg); color: var(--accent-text);">JD</div>
+          <div>
+            <h4>JD 撰写官</h4>
+            <div class="role">把用人经理一句话扩成可发版 JD</div>
+          </div>
+        </div>
+        <p>输入：岗位 Title + 职级 + 经理口语需求 → 输出 7 段式标准 JD</p>
+        <div class="agent-actions">
+          <span class="tag">/jd</span>
+          <span class="tag">社招 · 校招 · 高端</span>
+          <span class="tag">合规自检</span>
+        </div>
+      </div>
+
+      <div class="agent">
+        <div class="agent-head">
+          <div class="agent-avatar" style="background: var(--purple-bg); color: var(--purple);">筛</div>
+          <div>
+            <h4>简历筛选官</h4>
+            <div class="role">5 维打分 + 红线一票否决</div>
+          </div>
+        </div>
+        <p>输入：简历 + JD 编号 → 输出评分 + 亮点/风险 + 推荐动作</p>
+        <div class="agent-actions">
+          <span class="tag">/screen</span>
+          <span class="tag">约 / 备 / 拒</span>
+          <span class="tag">人才库激活</span>
+        </div>
+      </div>
+
+      <div class="agent">
+        <div class="agent-head">
+          <div class="agent-avatar" style="background: var(--coral-bg); color: var(--coral);">面</div>
+          <div>
+            <h4>面试官助理</h4>
+            <div class="role">出题 + 追问 + 自动面评卡</div>
+          </div>
+        </div>
+        <p>输入：JD + 候选人 → 输出 5-7 道 STAR 题 + 结构化面评</p>
+        <div class="agent-actions">
+          <span class="tag">/interview</span>
+          <span class="tag">/eval</span>
+          <span class="tag">5 维雷达</span>
+        </div>
+      </div>
+
+      <div class="agent">
+        <div class="agent-head">
+          <div class="agent-avatar" style="background: var(--green-bg); color: var(--green);">报</div>
+          <div>
+            <h4>招聘周报官</h4>
+            <div class="role">3 分钟看完的周报</div>
+          </div>
+        </div>
+        <p>输入：本周数据 + 亮点 + 卡点 → 输出看板 + 周报</p>
+        <div class="agent-actions">
+          <span class="tag">/weekly</span>
+          <span class="tag">周五自动推</span>
+          <span class="tag">企微 #招聘组</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>自动化任务 <span class="badge">5 个</span></h2>
+      <div class="auto">
+        <div class="auto-status amber"></div>
+        <div class="auto-main">
+          <div class="auto-title">01 · 周报自动生成</div>
+          <div class="auto-desc">每周五 17:30 拉数据 → 出周报 → 推企微</div>
+        </div>
+        <div class="auto-freq">每周五</div>
+      </div>
+      <div class="auto">
+        <div class="auto-status amber"></div>
+        <div class="auto-main">
+          <div class="auto-title">02 · 人才库激活</div>
+          <div class="auto-desc">沉睡 > 90 天候选人二次触达</div>
+        </div>
+        <div class="auto-freq">每周一</div>
+      </div>
+      <div class="auto">
+        <div class="auto-status amber"></div>
+        <div class="auto-main">
+          <div class="auto-title">03 · 面试提醒</div>
+          <div class="auto-desc">候选人 + 面试官双提醒</div>
+        </div>
+        <div class="auto-freq">T-24h + T-2h</div>
+      </div>
+      <div class="auto">
+        <div class="auto-status"></div>
+        <div class="auto-main">
+          <div class="auto-title">04 · JD 健康度巡检</div>
+          <div class="auto-desc">30 天未推 JD 标红</div>
+        </div>
+        <div class="auto-freq">每月 1 号</div>
+      </div>
+      <div class="auto">
+        <div class="auto-status"></div>
+        <div class="auto-main">
+          <div class="auto-title">05 · 流程超时预警</div>
+          <div class="auto-desc">单环节 > 7 天自动催办</div>
+        </div>
+        <div class="auto-freq">实时</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Detail row 2: Skills + Files -->
+  <div class="row">
+    <div class="card">
+      <h2>Skill / 提示词包</h2>
+      <div class="tabs">
+        <div class="tab active" data-panel="p-all">全部</div>
+        <div class="tab" data-panel="p-jd">JD</div>
+        <div class="tab" data-panel="p-scr">筛选</div>
+        <div class="tab" data-panel="p-int">面试</div>
+        <div class="tab" data-panel="p-week">周报</div>
+      </div>
+
+      <div class="tab-panel active" id="p-all">
+        <table>
+          <thead><tr><th>触发词</th><th>名称</th><th>对应员工</th></tr></thead>
+          <tbody>
+            <tr><td><code>/jd</code></td><td>JD 生成</td><td>JD 撰写官</td></tr>
+            <tr><td><code>/screen</code></td><td>简历评估</td><td>简历筛选官</td></tr>
+            <tr><td><code>/interview</code></td><td>行为面试出题</td><td>面试官助理</td></tr>
+            <tr><td><code>/eval</code></td><td>面评生成</td><td>面试官助理</td></tr>
+            <tr><td><code>/weekly</code></td><td>周报生成</td><td>招聘周报官</td></tr>
+            <tr><td><code>/offer</code></td><td>Offer 话术</td><td>招聘周报官</td></tr>
+            <tr><td><code>/talent-pool</code></td><td>人才库激活</td><td>简历筛选官</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="tab-panel" id="p-jd">
+        <table>
+          <thead><tr><th>触发词</th><th>名称</th></tr></thead>
+          <tbody>
+            <tr><td><code>/jd</code></td><td>JD 生成</td></tr>
+            <tr><td><code>/offer</code></td><td>Offer 话术</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="tab-panel" id="p-scr">
+        <table>
+          <thead><tr><th>触发词</th><th>名称</th></tr></thead>
+          <tbody>
+            <tr><td><code>/screen</code></td><td>简历评估</td></tr>
+            <tr><td><code>/talent-pool</code></td><td>人才库激活</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="tab-panel" id="p-int">
+        <table>
+          <thead><tr><th>触发词</th><th>名称</th></tr></thead>
+          <tbody>
+            <tr><td><code>/interview</code></td><td>行为面试出题</td></tr>
+            <tr><td><code>/eval</code></td><td>面评生成</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="tab-panel" id="p-week">
+        <table>
+          <thead><tr><th>触发词</th><th>名称</th></tr></thead>
+          <tbody>
+            <tr><td><code>/weekly</code></td><td>周报生成</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>工作区文件</h2>
+      <div class="file-row">
+        <div class="file-icon"></div>
+        <span>JD 库</span>
+        <span class="meta">32 份 · 4 个方向</span>
+      </div>
+      <div class="file-row">
+        <div class="file-icon" style="background: var(--purple-bg);"></div>
+        <span>简历库</span>
+        <span class="meta">187 份 · 在面 41 / 备选 56</span>
+      </div>
+      <div class="file-row">
+        <div class="file-icon" style="background: var(--coral-bg);"></div>
+        <span>周报库</span>
+        <span class="meta">本周 W40 待生成</span>
+      </div>
+      <div class="file-row">
+        <div class="file-icon" style="background: var(--green-bg);"></div>
+        <span>面评库</span>
+        <span class="meta">已沉淀 89 份</span>
+      </div>
+      <div class="file-row">
+        <div class="file-icon" style="background: var(--amber-bg);"></div>
+        <span>知识库</span>
+        <span class="meta">公司介绍 / 岗位画像 / 面试标准</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">点击顶部模块可联动 · 数据为示例 · 由数字员工自动维护</div>
+</div>
+
+<script>
+  // Tabs
+  document.querySelectorAll('.tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      const card = tab.closest('.card');
+      card.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      card.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+      tab.classList.add('active');
+      card.querySelector('#' + tab.dataset.panel).classList.add('active');
+    });
+  });
+
+  // Module click highlight
+  document.querySelectorAll('.module').forEach(m => {
+    m.addEventListener('click', () => {
+      document.querySelectorAll('.module').forEach(x => x.classList.remove('active'));
+      m.classList.add('active');
+    });
+  });
+</script>
+</body>
+</html>
